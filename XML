@@ -1,0 +1,42 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
+
+namespace Maddie_Script
+{
+    public static class XML
+    {
+        public static string File = "Settings.xml";
+        public static XmlSerializer Serializer = new XmlSerializer(typeof(Bot_Settings));
+
+        public static void Load() => Read();
+
+        public static void Read()
+        {
+            using (FileStream FS = new FileStream(File, FileMode.Open))
+                Bot.Settings = (Bot_Settings)Serializer.Deserialize(FS);
+        }
+
+        public static void Write()
+        {
+            Serializer.Serialize(new StreamWriter(File), Bot.Settings);
+            // await Una.Say("Basic Protocols Altered");
+        }
+
+        public static void Update_Property(string Prop, dynamic Value)
+        {
+            switch (Prop.Trim().ToLower())
+            {
+                case "game": Bot.Settings.Game = Value; break;
+                case "token": Bot.Settings.Token = Value; break;
+                case "channel_main": Bot.Settings.Channel_Main = Value; break;
+            }
+            //  await Una.State_Status("Token -> " + Settings.Token);
+        }
+    }
+}

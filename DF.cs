@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Maddie_Script
+namespace Bot_Script
 {
     /// <summary>Discord Text Formatting</summary>
     public static class DF // Discord_Formater

@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
+
+namespace Bot_Script
+{
+    public static class Discord
+    {
+        public static DiscordSocketClient DSC = new DiscordSocketClient();
+        public static SocketMessage Message_Previous { get; set; }
+        public static SocketMessage Message_Current { get; set; }
+        public static string Message_Normalized { get; set; }
+        public static string Message_Return = "";
+
+        public static void Set()
+        {
+            DSC.Log += DSC_Log;
+            DSC.MessageReceived += DSC_MessageReceived;
+        }
+
+        public static Task DSC_Log(LogMessage arg)
+        {
+            Console.WriteLine(arg.ToString());
+            return Task.CompletedTask;
+        }
+
+        public static async Task DSC_MessageReceived(SocketMessage arg)
+        {
+            if (!(arg.Author.Username == Bot.Settings.Name && arg.Author.IsBot))
+            {
+                if (arg.Channel.Id == Bot.Settings.Channel_Main)
+                {
+                    Message_Current = arg;
+                    Message_Normalized = arg.Content.ToLower().Trim();
+                    //------------------------------------------
+                    //   Main Loop
+                    Loop.Command(Message_Current);
+                    //------------------------------------------
+                    if (Message_Return != "") { await Post.Send(Message_Return); Message_Return = ""; }
+                    Message_Previous = arg;
+                }
+            }
+        }
+
+        public static async Task Connect()
+        {
+            await DSC.LoginAsync(TokenType.Bot, Bot.Settings.Token);
+            await DSC.StartAsync();
+        }
+
+        public static class Post
+        {
+            public static async Task Send(string Message) => await Send(Bot.Settings.Channel_Main, Message);
+
+            public static async Task Send(ulong id, string Message)
+            {
+                try { await (DSC?.GetChannel(id) as IMessageChannel).SendMessageAsync(Message); } catch { }
+            }
+        }
+
+        public static void Dispose() => DSC?.Dispose();
+    }
+}

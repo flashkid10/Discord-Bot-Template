@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Maddie_Script
+{
+    public enum Command_Type
+    {
+        XML_Update,
+        XML_Update_Prop,
+    }
+
+    public static class Chat_Commands
+    {
+        public delegate void Discord_Command();
+
+        public static void Add_All()
+        {
+            Add(Command_Type.XML_Update, "xu", new Discord_Command(XML_Update));
+            Add(Command_Type.XML_Update, "xup", new Discord_Command(XML_Update_Prop));
+        }
+
+        public static void Add(Command_Type CT, string S, Discord_Command DC) => Commands.Add(new Tuple<Command_Type, string, Discord_Command>(CT, S.ToLower(), DC));
+
+        public static List<Tuple<Command_Type, string, Discord_Command>> Commands = new List<Tuple<Command_Type, string, Discord_Command>>();
+
+        #region XML
+
+        public static void XML_Update()
+        {
+        }
+
+        public static void XML_Update_Prop()
+        {
+        }
+
+        #endregion XML
+    }
+}

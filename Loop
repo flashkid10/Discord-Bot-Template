@@ -1,0 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
+
+namespace Bot_Script
+{
+    public static class Loop
+    {
+        public static void Command(SocketMessage MSM)
+        {
+            foreach (var CD in Chat_Commands.Commands)
+                if (Discord.Message_Normalized.Contains(CD.Item2))
+                    CD.Item3.Invoke();
+        }
+    }
+}

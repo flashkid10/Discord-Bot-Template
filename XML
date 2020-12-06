@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Maddie_Script
+namespace Bot_Script
 {
     public static class XML
     {
